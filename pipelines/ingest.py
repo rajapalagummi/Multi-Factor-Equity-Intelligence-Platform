@@ -53,8 +53,9 @@ def fetch_price_data(ticker: str, start: str, end: str) -> Optional[pd.DataFrame
             return None
         df = df.reset_index()
         df.columns = [c[0].lower() if isinstance(c, tuple) else c.lower()
-                      for c in df.columns]
+              for c in df.columns]
         df["ticker"] = ticker
+        df["date"] = pd.to_datetime(df["date"]).dt.date
         return df[["date", "ticker", "open", "high", "low", "close", "volume"]]
     except Exception as e:
         logger.error(f"Price fetch failed for {ticker}: {e}")
