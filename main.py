@@ -98,6 +98,10 @@ def run_demo(tickers=DEMO_TICKERS, years=DEMO_YEARS):
     regime_dist = spy_with_regime["regime_label"].value_counts()
     logger.info(f"Regime distribution over {years}y:\n{regime_dist}")
 
+    from analysis.statistical import run_statistical_analysis
+    run_statistical_analysis(value, latest_momentum, quality,
+                         composite, spy_with_regime, price_df, tickers)
+
     # Power analysis for A/B test
     min_n = power_analysis(effect_size=0.3, alpha=0.05, power=0.8)
     n_quarterly = years * 4
