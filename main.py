@@ -102,6 +102,10 @@ def run_demo(tickers=DEMO_TICKERS, years=DEMO_YEARS):
     run_statistical_analysis(value, latest_momentum, quality,
                          composite, spy_with_regime, price_df, tickers)
 
+    from analysis.factor_decay import run_factor_decay_analysis
+    run_factor_decay_analysis(value, latest_momentum, quality,
+                          composite, price_df)
+
     # Power analysis for A/B test
     min_n = power_analysis(effect_size=0.3, alpha=0.05, power=0.8)
     n_quarterly = years * 4
