@@ -106,6 +106,9 @@ def run_demo(tickers=DEMO_TICKERS, years=DEMO_YEARS):
     run_factor_decay_analysis(value, latest_momentum, quality,
                           composite, price_df)
 
+    from analysis.advanced_eda import run_advanced_eda
+    run_advanced_eda(value, latest_momentum, quality, composite, price_df)
+
     # Power analysis for A/B test
     min_n = power_analysis(effect_size=0.3, alpha=0.05, power=0.8)
     n_quarterly = years * 4
