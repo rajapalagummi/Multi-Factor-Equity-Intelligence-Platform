@@ -109,6 +109,9 @@ def run_demo(tickers=DEMO_TICKERS, years=DEMO_YEARS):
     from analysis.advanced_eda import run_advanced_eda
     run_advanced_eda(value, latest_momentum, quality, composite, price_df)
 
+    from analysis.hypothesis_testing import run_hypothesis_testing
+    run_hypothesis_testing(value, latest_momentum, quality, composite, spy_with_regime)
+
     # Power analysis for A/B test
     min_n = power_analysis(effect_size=0.3, alpha=0.05, power=0.8)
     n_quarterly = years * 4
