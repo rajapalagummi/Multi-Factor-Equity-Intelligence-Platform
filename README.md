@@ -1,158 +1,310 @@
-# QuantEdge — Multi-Factor Portfolio Intelligence Platform
+# Multi-Factor Equity Intelligence Platform
 
-> Production-grade quantitative finance pipeline: Value, Momentum, Quality factor computation on 100 S&P 500 constituents with HMM regime detection, walk-forward backtesting, A/B tested strategy evaluation, and live Tableau dashboard — orchestrated by Apache Airflow with Snowflake as the data warehouse.
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://python.org)
+[![MLflow](https://img.shields.io/badge/MLflow-Tracking-orange.svg)](https://mlflow.org)
+[![Airflow](https://img.shields.io/badge/Airflow-Orchestration-red.svg)](https://airflow.apache.org)
+
+End-to-end quantitative equity factor intelligence platform — Value, Momentum, and Quality factor computation across 100 S&P 500 constituents with HMM regime detection, walk-forward backtesting, statistical analysis, and production-grade MLflow experiment tracking.
 
 ---
 
-## Abstract
+## Overview
 
-QuantEdge implements a systematic, empirical study of multi-factor portfolio construction asking: *which combination of Value, Momentum, and Quality factors produces statistically significant excess returns over an equal-weight benchmark across different market regimes, and does that edge decay predictably?* Three factors are computed from first principles on 100 S&P 500 constituents across 10 years of daily data. A Hidden Markov Model detects three latent market regimes (bull/bear/neutral) from SPY price/volume/volatility. Information Coefficient is computed per factor per regime. A walk-forward backtest (252-day train, 63-day test, rolling) compares the factor-weighted long-short portfolio against an equal-weight benchmark using a Welch t-test on quarterly Sharpe ratios, with power analysis conducted before testing to ensure statistical validity. The full pipeline runs on a daily Airflow schedule, stores results in Snowflake, serves scores via a FastAPI endpoint, and surfaces findings in a live Tableau Public dashboard.
+This platform implements a full quantitative research pipeline:
 
----
-
-## System Formulation
-
-**Value Factor** — composite of inverted valuation ratios, cross-sectionally z-scored:
-$$V_i = -\frac{1}{3}\left[\tilde{P/B}_i + \tilde{P/E}_i + \tilde{P/S}_i\right]$$
-
-**Momentum Factor** — Jegadeesh-Titman (1993) 12-1 month return:
-$$M_i^{(t)} = \frac{P_i^{(t-21)}}{P_i^{(t-252)}} - 1$$
-
-**Quality Factor** — composite of profitability and leverage signals:
-$$Q_i = \frac{1}{4}\left[\tilde{ROE}_i + \tilde{Gross Margin}_i + \tilde{Op. Margin}_i - \tilde{D/E}_i\right]$$
-
-**Composite Factor:**
-$$C_i = \frac{1}{3}(V_i + M_i + Q_i)$$
-
-**HMM Regime Detection:** 3-state Gaussian HMM on $\mathbf{x}_t = [\log r_t, \tilde{V}_t, \hat{\sigma}_t]$, states labeled bull/bear/neutral by mean return ranking.
-
-**Spearman Information Coefficient:**
-$$IC_h = \text{Spearman}(C_t, r_{t+h}), \quad t\text{-stat} = IC\sqrt{\frac{n-2}{1-IC^2}}$$
-
-**A/B Test (Welch t-test on quarterly Sharpes):**
-$$H_0: \mu_{treatment} = \mu_{control}, \quad H_1: \mu_{treatment} > \mu_{control}$$
-
-Power analysis: $n_{min} = 2\left(\frac{z_{\alpha/2} + z_{\beta}}{\delta}\right)^2$ with $\delta=0.3$, $\alpha=0.05$, $\beta=0.2$
+- **Factor Engineering** — Value (P/B, P/E, EV/EBITDA), Momentum (12-1 month returns), Quality (ROE, debt-to-equity, earnings stability)
+- **Regime Detection** — Hidden Markov Model on SPY price series identifying Bull, Bear, and Neutral market regimes
+- **Walk-Forward Backtest** — Rolling window backtest with Welch t-test A/B testing on quarterly Sharpe ratios
+- **Statistical Analysis** — Distribution analysis, outlier detection (IQR + Z-score + Mahalanobis), correlation heatmaps
+- **Factor Decay Analysis** — Information Coefficient decay, autocorrelation, turnover, half-life estimation
+- **Advanced EDA** — Cross-sectional dispersion, factor crowding, quantile return analysis, return attribution
+- **Hypothesis Testing** — Welch t-test, Mann-Whitney U, KS tests, bootstrap CIs, Bonferroni + FDR correction
+- **Production Serving** — FastAPI REST endpoints, Airflow DAG scheduling, Snowflake storage
 
 ---
 
 ## Architecture
 
 ```
-yfinance (100 tickers, 10yr OHLCV + fundamentals)
-              │
-              ▼
-┌─────────────────────────────────────────────┐
-│         Apache Airflow DAG                   │
-│  Schedule: 6:30 AM ET, Mon-Fri              │
-│  Tasks: Ingest → Regime → Factors → QC →   │
-│         Backtest → Cache → Alert            │
-└──────────────────┬──────────────────────────┘
-                   │
-       ┌───────────┼───────────┐
-       ▼           ▼           ▼
-   AWS S3       Snowflake    MLflow
- (raw CSVs)   (structured)  (experiments)
-       │           │
-       └─────┬─────┘
-             ▼
-┌─────────────────────────────────────────────┐
-│         Factor Computation Engine            │
-│  Value: P/B, P/E, P/S (inverted, z-scored) │
-│  Momentum: 12-1 month return (skip 1mo)     │
-│  Quality: ROE, margins, leverage             │
-│  HMM: bull/bear/neutral regime states       │
-└──────────────────┬──────────────────────────┘
-                   │
-                   ▼
-┌─────────────────────────────────────────────┐
-│      Walk-Forward Backtesting Engine         │
-│  Train: 252 days | Test: 63 days | Rolling  │
-│  Treatment: factor-weighted long-short       │
-│  Control: equal-weight benchmark             │
-│  A/B Test: Welch t-test on quarterly Sharpe │
-│  Power analysis: min_n computed first        │
-└──────────────────┬──────────────────────────┘
-                   │
-          ┌────────┴────────┐
-          ▼                 ▼
-    FastAPI REST       Tableau Public
-    /factors/{ticker}  Live Dashboard
-    /backtest/{strat}  (public URL)
-    /ab-test
-    /regime
+QuantEdge/
+├── analysis/
+│   ├── statistical.py          # Distribution analysis, outlier detection, correlation
+│   ├── factor_decay.py         # IC decay, autocorrelation, turnover, half-life
+│   ├── advanced_eda.py         # Dispersion, crowding, quantile analysis, attribution
+│   └── hypothesis_testing.py   # t-tests, Mann-Whitney, KS, bootstrap CIs, FDR
+├── api/
+│   └── main.py                 # FastAPI REST endpoints
+├── backtest/
+│   └── engine.py               # Walk-forward backtest, A/B testing, power analysis
+├── dags/
+│   └── quantedge_dag.py        # Airflow DAG for daily factor recomputation
+├── factors/
+│   ├── compute.py              # Value, Momentum, Quality factor computation
+│   └── regime.py               # HMM regime detection on SPY
+├── pipelines/
+│   └── ingest.py               # Data ingestion from yfinance + fundamentals
+├── main.py                     # Pipeline orchestrator
+├── requirements.txt
+└── LICENSE
 ```
 
 ---
 
-## Production Infrastructure
+## Quickstart
 
-| Component | Technology | Cost |
-|---|---|---|
-| Orchestration | Apache Airflow (Docker / Astronomer free tier) | Free |
-| Data Warehouse | Snowflake (30-day trial → pay-per-query) | ~$0 idle |
-| Raw Storage | AWS S3 (free tier 5GB) | ~$0 |
-| Experiment Tracking | MLflow (local or remote) | Free |
-| API | FastAPI on AWS EC2 t2.micro | ~$0 (free tier) |
-| Dashboard | Tableau Public | Free (public) |
-| Data | yfinance (free) | Free |
+```bash
+git clone https://github.com/rajapalagummi/Multi-Factor-Equity-Intelligence-Platform.git
+cd Multi-Factor-Equity-Intelligence-Platform
+python3.12 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python main.py --mode demo
+```
 
-**Cost when idle:** $0. **Cost to run for demo:** < $0.50 (Snowflake query + EC2 minutes).
+Demo runs on 10 tickers (AAPL, MSFT, GOOGL, AMZN, NVDA, JPM, BAC, JNJ, PG, XOM) over 5 years.
 
 ---
 
-## Key Results (populated after first full run)
+## Usage
+
+```bash
+python main.py --mode demo      # Quick demo — 10 tickers, 5 years
+python main.py --mode full      # Full pipeline — 100 tickers, Snowflake storage
+python main.py --mode api       # Start FastAPI server on port 8000
+```
+
+**API Endpoints:**
+
+```
+GET  /health                    # Health check
+GET  /regime                    # Current market regime + probabilities
+GET  /factors/{ticker}          # Factor scores for one ticker
+GET  /factors/universe/top      # Top composite factor scores across universe
+```
+
+---
+
+## Statistical Analysis Module
+
+Added as an additive enhancement — zero changes to existing pipeline code.
+
+**What it produces:**
+
+### Factor Distribution Analysis
+Histogram, box plot, and QQ plot for each factor across the universe.
+
+![Factor Distributions](images/factor_distributions.png)
+
+### Factor Correlation Heatmap
+Cross-factor Pearson and Spearman correlation with significance testing.
+
+![Correlation Heatmap](images/factor_correlation_heatmap.png)
+
+### HMM Regime Probabilities Over Time
+Bull/Bear/Neutral probability time series from the Hidden Markov Model.
+
+![Regime Probability](images/regime_probability_timeseries.png)
+
+### Market Regime Distribution
+Proportion of Bull, Bear, and Neutral regimes over the backtest period.
+
+![Regime Distribution](images/regime_distribution_pie.png)
+
+### Rolling 21-Day Annualized Volatility
+Universe-average rolling volatility across the full price history.
+
+![Rolling Volatility](images/rolling_volatility.png)
+
+### Maximum Drawdown Over Time
+Portfolio-level maximum drawdown time series.
+
+![Rolling Drawdown](images/rolling_drawdown.png)
+
+**Sample output:**
+```
+=== Statistical Analysis Module ===
+  Momentum Factor:
+    Skewness: -0.4947, Kurtosis: -0.7393
+    Normal (KS test): True, Normal (JB test): True
+    Outliers (IQR): 0 (0.0%)
+  Quality Factor:
+    Skewness: 1.2162, Kurtosis: 1.3705
+    Normal (KS test): True, Normal (JB test): True
+    Outliers (IQR): 0 (0.0%)
+```
+
+---
+
+## Factor Decay Analysis Module
+
+### Information Coefficient Decay
+Spearman IC between factor scores and forward returns across 1, 5, 10, and 21-day horizons.
+
+![IC Decay](images/factor_ic_decay.png)
+
+### Factor Autocorrelation
+Factor persistence analysis — how much today's factor score predicts tomorrow's.
+
+![Autocorrelation](images/factor_autocorrelation.png)
+
+### Factor Turnover
+Portfolio turnover rate for top 30% holdings — guides rebalancing frequency decisions.
+
+![Turnover](images/factor_turnover.png)
+
+### Factor Signal Half-Life
+Estimated number of periods before factor autocorrelation drops below 0.5 — rebalancing frequency guide.
+
+![Half Life](images/factor_half_life.png)
+
+---
+
+## Advanced EDA Module
+
+### Cross-Sectional Factor Dispersion
+Standard deviation, IQR, and range across the universe for each factor — measures opportunity set width.
+
+![Dispersion](images/eda_cross_sectional_dispersion.png)
+
+### Factor Z-Score Distribution
+Z-score distribution across all tickers with ±2σ outlier flagging.
+
+![Z-Score](images/eda_factor_zscore_distribution.png)
+
+### Quantile Return Analysis
+21-day forward return by factor quantile — tests factor monotonicity.
+
+![Quantile Returns](images/eda_quantile_return_analysis.png)
+
+### Factor Crowding Analysis
+Top 30% portfolio overlap between factor pairs — identifies concentration risk.
+
+![Crowding](images/eda_factor_crowding.png)
+
+### Return Attribution
+Spearman correlation between factor scores and 1-year forward returns.
+
+![Attribution](images/eda_return_attribution.png)
+
+---
+
+## Hypothesis Testing Module
+
+### Hypothesis Test p-values
+-log10(p-value) by factor and test type — red line at p=0.05 significance threshold.
+
+![Hypothesis Tests](images/hypothesis_test_pvalues.png)
+
+### Factor Significance Scores
+Combined significance score (0-1) from test power and effect size, graded A-D.
+
+![Significance Scores](images/factor_significance_scores.png)
+
+### Bootstrap 95% Confidence Intervals
+Bootstrap confidence intervals for Q1 (bottom) vs Q4 (top) factor value means.
+
+![Bootstrap CIs](images/bootstrap_confidence_intervals.png)
+
+**Sample output:**
+```
+  Momentum Q1 vs Q4: t=-2.847, p=0.0182, sig=True, effect=large
+  Quality Q1 vs Q4:  t=-1.923, p=0.0741, sig=False, effect=medium
+  Multiple comparison correction:
+    Total tests: 9
+    Bonferroni rejected: 3
+    FDR rejected: 5
+```
+
+---
+
+## Key Results
 
 | Metric | Value |
 |---|---|
 | Universe | 100 S&P 500 constituents |
-| Lookback | 10 years daily data |
-| Factor IC (composite, bull regime) | TBD after run |
-| Factor IC (composite, bear regime) | TBD after run |
-| A/B test p-value (treatment vs control) | TBD after run |
-| Walk-forward Sharpe (composite) | TBD after run |
-| Walk-forward Sharpe (equal-weight) | TBD after run |
-| Max drawdown (composite) | TBD after run |
+| Factor types | Value, Momentum, Quality, Composite |
+| Regime detection | HMM — Bull / Bear / Neutral |
+| Backtest type | Walk-forward, quarterly rebalancing |
+| A/B test | Welch t-test on Sharpe ratios |
+| Experiment tracking | MLflow (SQLite backend) |
+| Scheduling | Airflow DAG (daily recomputation) |
+| Storage | Snowflake (QUANTEDGE database) |
+| API | FastAPI on port 8000 |
 
 ---
 
-## Setup
+## Analysis Modules
 
-```bash
-# 1. Clone and configure
-cp .env.template .env
-# Fill in SNOWFLAKE_*, AWS_*, MLFLOW_TRACKING_URI
+All analysis modules are additive — they import from and extend the existing pipeline without modifying any core files.
 
-# 2. Initialize Snowflake schema
-# Connect to Snowflake and run: data/snowflake_schema.sql
+```python
+# Add to main.py run_demo() after spy_with_regime block:
 
-# 3. Start local infrastructure
-docker compose up -d  # Starts Airflow, MLflow, API
+from analysis.statistical import run_statistical_analysis
+run_statistical_analysis(value, latest_momentum, quality,
+                         composite, spy_with_regime, price_df, tickers)
 
-# 4. Create venv and install
-python3.12 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+from analysis.factor_decay import run_factor_decay_analysis
+run_factor_decay_analysis(value, latest_momentum, quality,
+                          composite, price_df)
 
-# 5. Run demo (no cloud required)
-python main.py --mode demo
+from analysis.advanced_eda import run_advanced_eda
+run_advanced_eda(value, latest_momentum, quality, composite, price_df)
 
-# 6. Run full pipeline
-python main.py --mode full
-
-# 7. Start API only
-python main.py --mode api
-
-# 8. Run tests
-pytest tests/ -v
+from analysis.hypothesis_testing import run_hypothesis_testing
+run_hypothesis_testing(value, latest_momentum, quality,
+                       composite, spy_with_regime)
 ```
 
 ---
 
-## References
+## Requirements
 
-Fama, E.F. & French, K.R. (1993). Common risk factors in the returns on stocks and bonds. *Journal of Financial Economics*, 33(1), 3–56.
+```
+yfinance
+pandas
+numpy
+scikit-learn
+scipy
+plotly
+kaleido
+mlflow
+hmmlearn
+apache-airflow
+fastapi
+uvicorn
+snowflake-connector-python
+python-dotenv
+networkx
+```
 
-Jegadeesh, N. & Titman, S. (1993). Returns to buying winners and selling losers. *Journal of Finance*, 48(1), 65–91.
+---
 
-Asness, C., Frazzini, A. & Pedersen, L.H. (2019). Quality minus junk. *Review of Accounting Studies*, 24(1), 34–112.
+## Environment Variables
+
+```bash
+MLFLOW_TRACKING_URI=sqlite:///mlruns.db
+SNOWFLAKE_ACCOUNT=your_account
+SNOWFLAKE_USER=your_user
+SNOWFLAKE_PASSWORD=your_password
+SNOWFLAKE_DATABASE=QUANTEDGE
+SNOWFLAKE_SCHEMA=FACTORS
+API_HOST=0.0.0.0
+API_PORT=8000
+```
+
+---
+
+## License
+
+MIT License — see [LICENSE](LICENSE) for details.
+
+---
+
+## Author
+
+**Raja Palagummi**
+- GitHub: [rajapalagummi](https://github.com/rajapalagummi)
+- Portfolio: [rajapalagummi.com](https://rajapalagummi.com)
+- LinkedIn: [rajapalagummi](https://linkedin.com/in/rajapalagummi)
