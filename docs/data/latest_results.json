@@ -1,0 +1,90 @@
+{
+  "last_updated": "2026-08-19T01:45:07.038548",
+  "mode": "demo",
+  "tickers": [
+    "AAPL",
+    "MSFT",
+    "GOOGL",
+    "AMZN",
+    "NVDA",
+    "JPM",
+    "BAC",
+    "JNJ",
+    "PG",
+    "XOM"
+  ],
+  "years": 5,
+  "regime": {
+    "current": 0,
+    "current_label": "bull",
+    "bull_prob": 0.0,
+    "bear_prob": 0.999372
+  },
+  "factor_scores": {
+    "AAPL": {
+      "value": null,
+      "momentum": 0.699068,
+      "quality": 0.338246,
+      "composite": 0.769758
+    },
+    "MSFT": {
+      "value": null,
+      "momentum": -1.731669,
+      "quality": 0.729566,
+      "composite": -0.74133
+    },
+    "GOOGL": {
+      "value": null,
+      "momentum": 1.643766,
+      "quality": 0.629694,
+      "composite": 1.649866
+    },
+    "AMZN": {
+      "value": null,
+      "momentum": -0.660977,
+      "quality": -0.635671,
+      "composite": -0.959571
+    },
+    "NVDA": {
+      "value": null,
+      "momentum": -0.493109,
+      "quality": 2.229661,
+      "composite": 1.287853
+    },
+    "JPM": {
+      "value": null,
+      "momentum": -0.2486,
+      "quality": -0.6544,
+      "composite": -0.667901
+    },
+    "BAC": {
+      "value": null,
+      "momentum": 0.234223,
+      "quality": -1.111405,
+      "composite": -0.648771
+    },
+    "JNJ": {
+      "value": null,
+      "momentum": 0.871846,
+      "quality": -0.210977,
+      "composite": 0.490834
+    },
+    "PG": {
+      "value": null,
+      "momentum": -0.93328,
+      "quality": -0.724937,
+      "composite": -1.203361
+    },
+    "XOM": {
+      "value": null,
+      "momentum": 0.61873,
+      "quality": -0.589777,
+      "composite": 0.022622
+    }
+  },
+  "power_analysis": {
+    "min_n_required": 175,
+    "available_quarters": 20,
+    "adequately_powered": false
+  }
+}
