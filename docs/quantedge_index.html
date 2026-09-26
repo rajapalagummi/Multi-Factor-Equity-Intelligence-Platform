@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantEdge — Multi-Factor Equity Intelligence</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #111827;
+    --border: #1f2937;
+    --accent: #3b82f6;
+    --green: #10b981;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --text: #f3f4f6;
+    --muted: #6b7280;
+    --bull: #10b981;
+    --bear: #ef4444;
+    --neutral: #f59e0b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  header p {
+    color: var(--muted);
+    margin-top: 6px;
+    font-size: 0.9rem;
+  }
+  .updated {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .grid-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto 24px;
+  }
+  .grid-main {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto 24px;
+  }
+  .grid-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto 24px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .card h2 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .regime-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .regime-bull { background: rgba(16,185,129,0.15); color: var(--bull); border: 1px solid rgba(16,185,129,0.3); }
+  .regime-bear { background: rgba(239,68,68,0.15); color: var(--bear); border: 1px solid rgba(239,68,68,0.3); }
+  .regime-neutral { background: rgba(245,158,11,0.15); color: var(--neutral); border: 1px solid rgba(245,158,11,0.3); }
+  .prob-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .prob-label { font-size: 0.8rem; color: var(--muted); width: 80px; }
+  .prob-bar-wrap { flex: 1; background: var(--border); border-radius: 4px; height: 8px; overflow: hidden; }
+  .prob-bar { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+  .prob-val { font-size: 0.8rem; font-weight: 600; width: 40px; text-align: right; }
+  .power-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .stat-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+  }
+  .stat-box .val {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .stat-box .lbl {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .ticker-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .ticker-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .ticker-btn:hover { border-color: var(--accent); }
+  .ticker-btn.active {
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.1);
+  }
+  .ticker-btn .sym {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+  .ticker-btn .comp-score {
+    font-size: 0.75rem;
+    margin-top: 2px;
+  }
+  .score-pos { color: var(--green); }
+  .score-neg { color: var(--red); }
+  .score-na { color: var(--muted); }
+  .detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .detail-ticker {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .factor-rows { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .factor-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .factor-name { font-size: 0.8rem; color: var(--muted); width: 90px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .factor-bar-wrap { flex: 1; background: var(--border); border-radius: 4px; height: 10px; overflow: hidden; position: relative; }
+  .factor-bar { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+  .factor-val { font-size: 0.85rem; font-weight: 600; width: 60px; text-align: right; }
+  .rank-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  .rank-top { background: rgba(16,185,129,0.2); color: var(--green); }
+  .rank-bot { background: rgba(239,68,68,0.2); color: var(--red); }
+  .rank-mid { background: rgba(107,114,128,0.2); color: var(--muted); }
+  canvas { max-height: 200px; }
+  .footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+  @media (max-width: 768px) {
+    .grid-top, .grid-main, .grid-bottom { grid-template-columns: 1fr; }
+    body { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>QuantEdge</h1>
+  <p>Multi-Factor Equity Intelligence Platform — Value · Momentum · Quality · HMM Regime Detection</p>
+  <div class="updated" id="updated"></div>
+</header>
+
+<div class="grid-top">
+  <div class="card" id="regime-card">
+    <h2>Market Regime</h2>
+    <div id="regime-content"></div>
+  </div>
+  <div class="card">
+    <h2>A/B Test Power Analysis</h2>
+    <div class="power-grid" id="power-grid"></div>
+  </div>
+</div>
+
+<div class="grid-main">
+  <div class="card">
+    <h2>Select Ticker</h2>
+    <div class="ticker-grid" id="ticker-grid"></div>
+  </div>
+  <div class="card" id="detail-card">
+    <h2>Factor Detail</h2>
+    <div id="detail-content"><p style="color:var(--muted);font-size:0.85rem">Select a ticker to view factor scores</p></div>
+  </div>
+</div>
+
+<div class="grid-bottom">
+  <div class="card">
+    <h2>Composite Score — All Tickers</h2>
+    <canvas id="composite-chart"></canvas>
+  </div>
+  <div class="card">
+    <h2>Factor Scores — Selected Ticker</h2>
+    <canvas id="factor-chart"></canvas>
+  </div>
+</div>
+
+<div class="footer">
+  <p>
+    <a href="https://github.com/rajapalagummi/Multi-Factor-Equity-Intelligence-Platform" target="_blank">GitHub</a> ·
+    <a href="https://rajapalagummi.com" target="_blank">Portfolio</a> ·
+    MIT License · Raja Palagummi
+  </p>
+</div>
+
+<script>
+let data = null;
+let compositeChart = null;
+let factorChart = null;
+let selectedTicker = null;
+
+async function loadData() {
+  try {
+    const res = await fetch('data/latest_results.json');
+    data = await res.json();
+    render();
+  } catch(e) {
+    document.body.innerHTML += '<p style="color:red;text-align:center">Could not load data/latest_results.json — run python main.py --mode demo first</p>';
+  }
+}
+
+function fmt(val, digits=3) {
+  if (val === null || val === undefined) return 'N/A';
+  return parseFloat(val).toFixed(digits);
+}
+
+function scoreColor(val) {
+  if (val === null) return 'var(--muted)';
+  return val > 0 ? 'var(--green)' : 'var(--red)';
+}
+
+function barColor(val) {
+  if (val === null) return '#374151';
+  return val > 0 ? '#10b981' : '#ef4444';
+}
+
+function barWidth(val, max) {
+  if (val === null) return 0;
+  return Math.min(100, Math.abs(val) / max * 100);
+}
+
+function regimeClass(label) {
+  if (!label) return 'regime-neutral';
+  const l = label.toLowerCase();
+  if (l.includes('bull')) return 'regime-bull';
+  if (l.includes('bear')) return 'regime-bear';
+  return 'regime-neutral';
+}
+
+function getRank(ticker, scores) {
+  const valid = Object.entries(scores)
+    .filter(([,v]) => v.composite !== null)
+    .sort((a,b) => b[1].composite - a[1].composite);
+  const idx = valid.findIndex(([t]) => t === ticker);
+  if (idx === -1) return null;
+  const pct = idx / valid.length;
+  if (pct < 0.33) return { label: 'Top Tier', cls: 'rank-top' };
+  if (pct > 0.66) return { label: 'Bottom Tier', cls: 'rank-bot' };
+  return { label: 'Mid Tier', cls: 'rank-mid' };
+}
+
+function render() {
+  // Updated
+  document.getElementById('updated').textContent =
+    'Last updated: ' + new Date(data.last_updated).toLocaleString() +
+    ' · ' + data.years + 'Y backtest · ' + data.mode + ' mode';
+
+  // Regime
+  const r = data.regime;
+  const rLabel = r.current_label || 'neutral';
+  const rClass = regimeClass(rLabel);
+  document.getElementById('regime-content').innerHTML = `
+    <div style="margin-bottom:14px">
+      <span class="regime-badge ${rClass}">● ${rLabel.toUpperCase()}</span>
+    </div>
+    <div class="prob-row">
+      <span class="prob-label">Bull Prob</span>
+      <div class="prob-bar-wrap"><div class="prob-bar" style="width:${(r.bull_prob*100).toFixed(1)}%;background:var(--bull)"></div></div>
+      <span class="prob-val" style="color:var(--bull)">${(r.bull_prob*100).toFixed(1)}%</span>
+    </div>
+    <div class="prob-row">
+      <span class="prob-label">Bear Prob</span>
+      <div class="prob-bar-wrap"><div class="prob-bar" style="width:${(r.bear_prob*100).toFixed(1)}%;background:var(--bear)"></div></div>
+      <span class="prob-val" style="color:var(--bear)">${(r.bear_prob*100).toFixed(1)}%</span>
+    </div>
+  `;
+
+  // Power analysis
+  const p = data.power_analysis;
+  document.getElementById('power-grid').innerHTML = `
+    <div class="stat-box"><div class="val">${p.min_n_required}</div><div class="lbl">Min Quarters Required</div></div>
+    <div class="stat-box"><div class="val">${p.available_quarters}</div><div class="lbl">Available Quarters</div></div>
+    <div class="stat-box"><div class="val" style="color:${p.adequately_powered?'var(--green)':'var(--red)'}">${p.adequately_powered?'YES':'NO'}</div><div class="lbl">Adequately Powered</div></div>
+  `;
+
+  // Ticker grid
+  const scores = data.factor_scores;
+  const maxComp = Math.max(...Object.values(scores).map(v => Math.abs(v.composite||0)));
+  const tickerGrid = document.getElementById('ticker-grid');
+  tickerGrid.innerHTML = data.tickers.map(t => {
+    const s = scores[t];
+    const comp = s.composite;
+    const cls = comp === null ? 'score-na' : comp > 0 ? 'score-pos' : 'score-neg';
+    return `<button class="ticker-btn" onclick="selectTicker('${t}')" id="btn-${t}">
+      <div class="sym">${t}</div>
+      <div class="comp-score ${cls}">Composite: ${fmt(comp)}</div>
+    </button>`;
+  }).join('');
+
+  // Composite chart
+  const sorted = [...data.tickers].sort((a,b) =>
+    (scores[b].composite||0) - (scores[a].composite||0));
+  const compVals = sorted.map(t => scores[t].composite || 0);
+  const compColors = compVals.map(v => v > 0 ? 'rgba(16,185,129,0.8)' : 'rgba(239,68,68,0.8)');
+
+  if (compositeChart) compositeChart.destroy();
+  compositeChart = new Chart(document.getElementById('composite-chart'), {
+    type: 'bar',
+    data: {
+      labels: sorted,
+      datasets: [{
+        label: 'Composite Factor Score',
+        data: compVals,
+        backgroundColor: compColors,
+        borderColor: compColors.map(c => c.replace('0.8','1')),
+        borderWidth: 1,
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#6b7280', font: { size: 11 } }, grid: { color: '#1f2937' } },
+        y: { ticks: { color: '#6b7280', font: { size: 11 } }, grid: { color: '#1f2937' } }
+      }
+    }
+  });
+
+  // Select first ticker by default
+  if (data.tickers.length > 0) selectTicker(data.tickers[0]);
+}
+
+function selectTicker(ticker) {
+  selectedTicker = ticker;
+
+  // Update button states
+  document.querySelectorAll('.ticker-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('btn-' + ticker);
+  if (btn) btn.classList.add('active');
+
+  const s = data.factor_scores[ticker];
+  const rank = getRank(ticker, data.factor_scores);
+  const maxAbs = Math.max(
+    Math.abs(s.value||0), Math.abs(s.momentum||0),
+    Math.abs(s.quality||0), Math.abs(s.composite||0), 1
+  );
+
+  document.getElementById('detail-content').innerHTML = `
+    <div class="detail-header">
+      <span class="detail-ticker">${ticker}</span>
+      ${rank ? `<span class="rank-badge ${rank.cls}">${rank.label}</span>` : ''}
+    </div>
+    <div class="factor-rows">
+      ${[
+        ['Value', s.value],
+        ['Momentum', s.momentum],
+        ['Quality', s.quality],
+        ['Composite', s.composite],
+      ].map(([name, val]) => `
+        <div class="factor-row">
+          <span class="factor-name">${name}</span>
+          <div class="factor-bar-wrap">
+            <div class="factor-bar" style="width:${barWidth(val,maxAbs)}%;background:${barColor(val)}"></div>
+          </div>
+          <span class="factor-val" style="color:${scoreColor(val)}">${fmt(val)}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  // Factor radar/bar chart
+  const labels = ['Value', 'Momentum', 'Quality', 'Composite'];
+  const vals = [s.value, s.momentum, s.quality, s.composite].map(v => v || 0);
+  const colors = vals.map(v => v > 0 ? 'rgba(16,185,129,0.8)' : 'rgba(239,68,68,0.8)');
+
+  if (factorChart) factorChart.destroy();
+  factorChart = new Chart(document.getElementById('factor-chart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: ticker,
+        data: vals,
+        backgroundColor: colors,
+        borderColor: colors.map(c => c.replace('0.8','1')),
+        borderWidth: 1,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#6b7280' }, grid: { color: '#1f2937' } },
+        y: { ticks: { color: '#6b7280' }, grid: { color: '#1f2937' } }
+      }
+    }
+  });
+}
+
+loadData();
+</script>
+</body>
+</html>
