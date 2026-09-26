@@ -27,6 +27,9 @@ This platform implements a full quantitative research pipeline:
 ## Architecture
 
 ```
+See [architecture.md](architecture.md) for full system diagrams.
+
+
 QuantEdge/
 ├── analysis/
 │   ├── statistical.py          # Distribution analysis, outlier detection, correlation
