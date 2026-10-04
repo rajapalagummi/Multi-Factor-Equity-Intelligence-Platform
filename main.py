@@ -62,6 +62,10 @@ def run_demo(tickers=DEMO_TICKERS, years=DEMO_YEARS):
     price_df["date"] = pd.to_datetime(price_df["date"])
     logger.info(f"Fetched {len(price_df)} price rows for {len(all_prices)} tickers")
 
+    price_df.to_csv("data/price_data.csv")
+    os.makedirs("data", exist_ok=True)
+
+
     # Fetch fundamentals
     fund_records = [fetch_fundamentals(t) for t in tickers]
     fund_df = pd.DataFrame(fund_records).set_index("ticker")
@@ -72,6 +76,7 @@ def run_demo(tickers=DEMO_TICKERS, years=DEMO_YEARS):
     quality = compute_quality_factor(fund_df)
 
     logger.info(f"Value factor: {value.dropna().describe().to_dict()}")
+    momentum_df.to_csv("data/momentum_data.csv")
 
     if not momentum_df.empty:
         latest_momentum = momentum_df.iloc[-1]
@@ -103,7 +108,7 @@ def run_demo(tickers=DEMO_TICKERS, years=DEMO_YEARS):
                          composite, spy_with_regime, price_df, tickers)
 
     from analysis.factor_decay import run_factor_decay_analysis
-    run_factor_decay_analysis(value, latest_momentum, quality,
+    run_factor_decay_analysis(value, momentum_df, quality,
                           composite, price_df)
 
     from analysis.advanced_eda import run_advanced_eda
