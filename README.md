@@ -26,6 +26,44 @@ This platform implements a full quantitative research pipeline:
 
 ## Architecture
 
+```mermaid
+flowchart TD
+    A([Yahoo Finance API
+100 S&P 500 Tickers · 5 Years]) --> B[Data Ingestion
+pipelines/ingest.py]
+    B --> C1[Value Factor
+P/B · P/E · EV/EBITDA]
+    B --> C2[Momentum Factor
+12-1 Month Returns]
+    B --> C3[Quality Factor
+ROE · D/E · Stability]
+    C1 & C2 & C3 --> D[Composite Factor
+Weighted Combination]
+    E([SPY Price Series]) --> F[HMM Regime Detection
+Bull · Bear · Neutral]
+    D & F --> G[Walk-Forward Backtest
+backtest/engine.py]
+    G --> G1[Welch t-test A/B
+Sharpe Ratio Comparison]
+    D --> H[Analysis Modules]
+    H --> H1[Statistical Analysis]
+    H --> H2[Factor Decay
+IC · Autocorrelation · Half-Life]
+    H --> H3[Advanced EDA]
+    H --> H4[Hypothesis Testing]
+    G & H --> I[MLflow Experiment Tracking]
+    I --> J[FastAPI Server]
+    K[Airflow DAG
+Daily Schedule] --> B
+    style A fill:#4A90D9,color:#fff
+    style D fill:#E74C3C,color:#fff
+    style F fill:#9B59B6,color:#fff
+    style H fill:#1ABC9C,color:#fff
+    style I fill:#F39C12,color:#fff
+```
+
+See [architecture.md](architecture.md) for full system diagrams.
+
 ```
 See [architecture.md](architecture.md) for full system diagrams.
 
