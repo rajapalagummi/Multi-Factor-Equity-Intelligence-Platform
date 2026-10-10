@@ -38,7 +38,7 @@ def compute_value_factor(fund_df: pd.DataFrame) -> pd.Series:
     for col in ["pb_ratio", "pe_ratio", "ps_ratio"]:
         if col in fund_df.columns:
             valid = fund_df[col].dropna()
-            if len(valid) > 10:
+            if len(valid) >= 2:
                 z = cross_sectional_zscore(fund_df[col])
                 components.append(-z)
 
@@ -146,7 +146,7 @@ def compute_information_coefficient(factor_scores: pd.Series,
         "t_stat": round(t_stat, 4),
         "p_value": round(pvalue, 4),
         "n": n,
-        "significant": abs(t_stat) > 2.0,
+        "significant": bool(abs(t_stat) > 2.0),
     }
 
 

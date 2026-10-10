@@ -61,6 +61,11 @@ def compute_sharpe(returns: pd.Series, rf_daily: float = None) -> float:
         rf_daily = RISK_FREE_RATE_ANNUAL / 252
     excess = returns - rf_daily
     if excess.std() < 1e-8:
+        mean = excess.mean()
+        if mean > 1e-12:
+            return float(np.sqrt(252) * mean / 1e-8)
+        elif mean < -1e-12:
+            return float(np.sqrt(252) * mean / 1e-8)
         return 0.0
     return float(np.sqrt(252) * excess.mean() / excess.std())
 

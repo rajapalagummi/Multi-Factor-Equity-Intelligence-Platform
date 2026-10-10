@@ -126,8 +126,11 @@ def run_demo(tickers=DEMO_TICKERS, years=DEMO_YEARS):
     logger.info(f"  Adequately powered: {n_quarterly >= min_n}")
 
     # Run backtest (MLflow tracked)
-    mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI", "sqlite:///mlruns.db"))
-    mlflow.set_experiment("quantedge_demo")
+    try:
+        mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI") or "sqlite:////Users/raja/Desktop/Projects/quantedge/mlruns.db")
+        mlflow.set_experiment("quantedge_demo")
+    except Exception as e:
+        logger.warning(f"MLflow setup failed, continuing without tracking: {e}")
 
     if not momentum_df.empty and not composite.empty:
         logger.info("\nRunning walk-forward backtest...")
