@@ -18,3 +18,4 @@ python-dotenv>=1.0.0
 pytest>=7.4.0
 hmmlearn
 kaleido>=1
+plotly==7.1.0
