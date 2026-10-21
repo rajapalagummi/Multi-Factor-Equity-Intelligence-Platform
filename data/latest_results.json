@@ -1,0 +1,720 @@
+{
+  "last_updated": "2026-10-17T20:11:40.517764",
+  "mode": "demo",
+  "tickers": [
+    "AAPL",
+    "MSFT",
+    "GOOGL",
+    "NVDA",
+    "META",
+    "AMZN",
+    "TSLA",
+    "AMD",
+    "INTC",
+    "CRM",
+    "JPM",
+    "BAC",
+    "WFC",
+    "GS",
+    "MS",
+    "BLK",
+    "C",
+    "AXP",
+    "USB",
+    "PNC",
+    "JNJ",
+    "UNH",
+    "PFE",
+    "ABBV",
+    "MRK",
+    "TMO",
+    "ABT",
+    "DHR",
+    "BMY",
+    "LLY",
+    "WMT",
+    "PG",
+    "KO",
+    "PEP",
+    "COST",
+    "NKE",
+    "MCD",
+    "SBUX",
+    "TGT",
+    "HD",
+    "GE",
+    "HON",
+    "MMM",
+    "CAT",
+    "BA",
+    "LMT",
+    "RTX",
+    "DE",
+    "EMR",
+    "ETN",
+    "XOM",
+    "CVX",
+    "COP",
+    "SLB",
+    "EOG",
+    "PXD",
+    "MPC",
+    "VLO",
+    "PSX",
+    "HAL",
+    "LIN",
+    "APD",
+    "ECL",
+    "DD",
+    "NEM",
+    "FCX",
+    "ALB",
+    "MOS",
+    "CF",
+    "FMC",
+    "AMT",
+    "PLD",
+    "CCI",
+    "EQIX",
+    "PSA",
+    "O",
+    "WELL",
+    "DLR",
+    "AVB",
+    "EQR",
+    "NEE",
+    "DUK",
+    "SO",
+    "D",
+    "AEP",
+    "EXC",
+    "SRE",
+    "XEL",
+    "WEC",
+    "ES",
+    "VZ",
+    "T",
+    "TMUS",
+    "NFLX",
+    "DIS",
+    "CMCSA",
+    "CHTR",
+    "ATVI",
+    "EA",
+    "TTWO"
+  ],
+  "years": 5,
+  "regime": {
+    "current": 2,
+    "current_label": "neutral",
+    "bull_prob": 0.000698,
+    "bear_prob": 0.000263
+  },
+  "factor_scores": {
+    "AAPL": {
+      "value": -2.01715,
+      "momentum": 0.411446,
+      "quality": 2.353941,
+      "composite": 0.546247
+    },
+    "MSFT": {
+      "value": -1.161581,
+      "momentum": -0.549432,
+      "quality": 1.603607,
+      "composite": -0.091877
+    },
+    "GOOGL": {
+      "value": -0.569604,
+      "momentum": 0.489145,
+      "quality": 1.339545,
+      "composite": 0.927229
+    },
+    "NVDA": {
+      "value": -2.41688,
+      "momentum": 0.072002,
+      "quality": 2.813082,
+      "composite": 0.337403
+    },
+    "META": {
+      "value": -0.474998,
+      "momentum": -0.61045,
+      "quality": 1.412181,
+      "composite": 0.231897
+    },
+    "AMZN": {
+      "value": 0.335008,
+      "momentum": -0.07346,
+      "quality": 0.077063,
+      "composite": 0.240755
+    },
+    "TSLA": {
+      "value": -3.346759,
+      "momentum": -0.893835,
+      "quality": -1.271248,
+      "composite": -2.366836
+    },
+    "AMD": {
+      "value": -3.29379,
+      "momentum": 2.763367,
+      "quality": 0.096117,
+      "composite": -0.335673
+    },
+    "INTC": {
+      "value": -0.864358,
+      "momentum": 3.653263,
+      "quality": -0.842167,
+      "composite": 1.440068
+    },
+    "CRM": {
+      "value": 0.149813,
+      "momentum": -0.403009,
+      "quality": 0.474792,
+      "composite": 0.153488
+    },
+    "JPM": {
+      "value": 0.300407,
+      "momentum": -0.089469,
+      "quality": -0.533767,
+      "composite": -0.252535
+    },
+    "BAC": {
+      "value": 0.609469,
+      "momentum": -0.1461,
+      "quality": -1.198794,
+      "composite": -0.560241
+    },
+    "WFC": {
+      "value": 0.616885,
+      "momentum": -0.424098,
+      "quality": -1.026696,
+      "composite": -0.633689
+    },
+    "GS": {
+      "value": 0.491861,
+      "momentum": 0.17527,
+      "quality": -0.801587,
+      "composite": -0.11205
+    },
+    "MS": {
+      "value": 0.470951,
+      "momentum": 0.216496,
+      "quality": 0.011174,
+      "composite": 0.509244
+    },
+    "BLK": {
+      "value": -0.105241,
+      "momentum": -0.758016,
+      "quality": 1.138263,
+      "composite": 0.193319
+    },
+    "C": {
+      "value": 0.710897,
+      "momentum": 0.415246,
+      "quality": -1.095837,
+      "composite": 0.010827
+    },
+    "AXP": {
+      "value": 0.372653,
+      "momentum": -0.622215,
+      "quality": 0.158647,
+      "composite": -0.079578
+    },
+    "USB": {
+      "value": 0.585833,
+      "momentum": 0.355482,
+      "quality": -0.749376,
+      "composite": 0.13137
+    },
+    "PNC": {
+      "value": 0.560601,
+      "momentum": 0.273974,
+      "quality": -0.698385,
+      "composite": 0.089794
+    },
+    "JNJ": {
+      "value": -0.36793,
+      "momentum": 0.636506,
+      "quality": 0.905458,
+      "composite": 0.863799
+    },
+    "UNH": {
+      "value": 0.720391,
+      "momentum": -0.323462,
+      "quality": -1.106101,
+      "composite": -0.540663
+    },
+    "PFE": {
+      "value": 0.352912,
+      "momentum": 0.046908,
+      "quality": 0.554318,
+      "composite": 0.699805
+    },
+    "ABBV": {
+      "value": 2.316111,
+      "momentum": 0.001184,
+      "quality": 2.108493,
+      "composite": 2.710803
+    },
+    "MRK": {
+      "value": -1.171365,
+      "momentum": 1.537525,
+      "quality": -0.539113,
+      "composite": -0.14076
+    },
+    "TMO": {
+      "value": -0.157666,
+      "momentum": 0.145193,
+      "quality": -0.317745,
+      "composite": -0.258046
+    },
+    "ABT": {
+      "value": 0.166686,
+      "momentum": -0.987982,
+      "quality": -0.129023,
+      "composite": -0.720506
+    },
+    "DHR": {
+      "value": -0.268592,
+      "momentum": -0.398907,
+      "quality": 0.072843,
+      "composite": -0.455259
+    },
+    "BMY": {
+      "value": 0.540102,
+      "momentum": 0.74874,
+      "quality": 0.910376,
+      "composite": 1.628363
+    },
+    "LLY": {
+      "value": -2.529502,
+      "momentum": 0.529238,
+      "quality": 2.7963,
+      "composite": 0.581895
+    },
+    "WMT": {
+      "value": 0.227573,
+      "momentum": -0.523416,
+      "quality": -0.998866,
+      "composite": -0.977345
+    },
+    "PG": {
+      "value": 0.098965,
+      "momentum": -0.415415,
+      "quality": 0.299143,
+      "composite": -0.024682
+    },
+    "KO": {
+      "value": -0.669839,
+      "momentum": 0.388885,
+      "quality": 0.958938,
+      "composite": 0.493853
+    },
+    "PEP": {
+      "value": 0.504663,
+      "momentum": -0.694858,
+      "quality": -0.047857,
+      "composite": -0.18931
+    },
+    "COST": {
+      "value": 0.054303,
+      "momentum": -0.640453,
+      "quality": -0.986354,
+      "composite": -1.184519
+    },
+    "NKE": {
+      "value": 0.745618,
+      "momentum": -1.636242,
+      "quality": -0.495393,
+      "composite": -1.045442
+    },
+    "MCD": {
+      "value": 2.34678,
+      "momentum": -0.910538,
+      "quality": 1.943795,
+      "composite": 2.508996
+    },
+    "SBUX": {
+      "value": 0.72502,
+      "momentum": 0.005622,
+      "quality": -1.743983,
+      "composite": -0.767506
+    },
+    "TGT": {
+      "value": 0.836865,
+      "momentum": 1.609601,
+      "quality": -0.900635,
+      "composite": 1.141079
+    },
+    "HD": {
+      "value": 0.058713,
+      "momentum": -0.996289,
+      "quality": -0.335184,
+      "composite": -0.960977
+    },
+    "GE": {
+      "value": -0.795706,
+      "momentum": -0.369311,
+      "quality": -0.039531,
+      "composite": -0.910105
+    },
+    "HON": {
+      "value": 0.776235,
+      "momentum": -0.360944,
+      "quality": -0.213599,
+      "composite": 0.138643
+    },
+    "MMM": {
+      "value": -0.634343,
+      "momentum": -0.256412,
+      "quality": -0.481332,
+      "composite": -1.035053
+    },
+    "CAT": {
+      "value": -0.403157,
+      "momentum": 0.797215,
+      "quality": -0.28618,
+      "composite": 0.068678
+    },
+    "BA": {
+      "value": -0.655346,
+      "momentum": -0.693582,
+      "quality": -1.667812,
+      "composite": -2.261606
+    },
+    "LMT": {
+      "value": 0.249454,
+      "momentum": -0.225386,
+      "quality": -0.510784,
+      "composite": -0.374759
+    },
+    "RTX": {
+      "value": 0.312683,
+      "momentum": 0.143997,
+      "quality": -0.871207,
+      "composite": -0.320922
+    },
+    "DE": {
+      "value": 0.091207,
+      "momentum": 0.883002,
+      "quality": -1.252977,
+      "composite": -0.219675
+    },
+    "EMR": {
+      "value": -0.021581,
+      "momentum": -0.113932,
+      "quality": 0.236189,
+      "composite": 0.063307
+    },
+    "ETN": {
+      "value": -0.219701,
+      "momentum": -0.277753,
+      "quality": -0.481316,
+      "composite": -0.741723
+    },
+    "XOM": {
+      "value": 0.591386,
+      "momentum": 0.788318,
+      "quality": -0.432137,
+      "composite": 0.694905
+    },
+    "CVX": {
+      "value": 0.620427,
+      "momentum": 0.637391,
+      "quality": 0.044458,
+      "composite": 0.95944
+    },
+    "COP": {
+      "value": 0.5348,
+      "momentum": 0.941922,
+      "quality": 0.413447,
+      "composite": 1.39788
+    },
+    "SLB": {
+      "value": 0.584881,
+      "momentum": 1.125023,
+      "quality": -0.893355,
+      "composite": 0.597193
+    },
+    "EOG": {
+      "value": 0.563214,
+      "momentum": 0.48526,
+      "quality": 1.185354,
+      "composite": 1.654174
+    },
+    "PXD": {
+      "value": null,
+      "momentum": null,
+      "quality": null,
+      "composite": -0.011775
+    },
+    "MPC": {
+      "value": 0.681378,
+      "momentum": 2.888029,
+      "quality": -0.800686,
+      "composite": 2.053088
+    },
+    "VLO": {
+      "value": 0.717335,
+      "momentum": 3.60586,
+      "quality": -0.680391,
+      "composite": 2.704964
+    },
+    "PSX": {
+      "value": 0.818366,
+      "momentum": 2.495832,
+      "quality": -1.008886,
+      "composite": 1.707486
+    },
+    "HAL": {
+      "value": 0.781126,
+      "momentum": 0.903358,
+      "quality": -0.990488,
+      "composite": 0.505795
+    },
+    "LIN": {
+      "value": -0.284871,
+      "momentum": -0.417689,
+      "quality": 0.262353,
+      "composite": -0.340073
+    },
+    "APD": {
+      "value": -0.167113,
+      "momentum": -0.153473,
+      "quality": -0.564592,
+      "composite": -0.671924
+    },
+    "ECL": {
+      "value": -0.190859,
+      "momentum": -0.483505,
+      "quality": -0.330614,
+      "composite": -0.761269
+    },
+    "DD": {
+      "value": 0.441008,
+      "momentum": 0.334293,
+      "quality": -0.568301,
+      "composite": 0.142602
+    },
+    "NEM": {
+      "value": 0.237869,
+      "momentum": 0.373793,
+      "quality": 1.750165,
+      "composite": 1.749634
+    },
+    "FCX": {
+      "value": 0.115068,
+      "momentum": 1.309148,
+      "quality": 0.315672,
+      "composite": 1.285803
+    },
+    "ALB": {
+      "value": -2.81231,
+      "momentum": -0.02209,
+      "quality": -0.299663,
+      "composite": -2.349103
+    },
+    "MOS": {
+      "value": 1.141627,
+      "momentum": -0.787251,
+      "quality": -1.735975,
+      "composite": -1.042146
+    },
+    "CF": {
+      "value": 0.689256,
+      "momentum": 1.025039,
+      "quality": 1.144691,
+      "composite": 2.120406
+    },
+    "FMC": {
+      "value": 1.195097,
+      "momentum": -1.773242,
+      "quality": -1.746993,
+      "composite": -1.745822
+    },
+    "AMT": {
+      "value": -1.057562,
+      "momentum": -0.615761,
+      "quality": 0.331712,
+      "composite": -1.012324
+    },
+    "PLD": {
+      "value": -0.969688,
+      "momentum": -0.148206,
+      "quality": 1.177173,
+      "composite": 0.032434
+    },
+    "CCI": {
+      "value": -0.008047,
+      "momentum": -1.022678,
+      "quality": 2.611994,
+      "composite": 1.167508
+    },
+    "EQIX": {
+      "value": -1.167982,
+      "momentum": 0.203309,
+      "quality": -0.136899,
+      "composite": -0.833307
+    },
+    "PSA": {
+      "value": -1.149625,
+      "momentum": -0.389459,
+      "quality": 1.295024,
+      "composite": -0.193791
+    },
+    "O": {
+      "value": -0.550306,
+      "momentum": -0.461506,
+      "quality": 1.432893,
+      "composite": 0.30226
+    },
+    "WELL": {
+      "value": -2.036975,
+      "momentum": 0.439237,
+      "quality": -0.43337,
+      "composite": -1.526539
+    },
+    "DLR": {
+      "value": -1.258748,
+      "momentum": -0.284842,
+      "quality": 0.126152,
+      "composite": -1.068875
+    },
+    "AVB": {
+      "value": -0.373401,
+      "momentum": null,
+      "quality": 0.461589,
+      "composite": 0.053994
+    },
+    "EQR": {
+      "value": -0.318039,
+      "momentum": null,
+      "quality": 0.340545,
+      "composite": 0.00501
+    },
+    "NEE": {
+      "value": 0.086896,
+      "momentum": -0.556475,
+      "quality": 0.212127,
+      "composite": -0.203777
+    },
+    "DUK": {
+      "value": 0.558415,
+      "momentum": -0.609836,
+      "quality": -0.133549,
+      "composite": -0.149722
+    },
+    "SO": {
+      "value": 0.396569,
+      "momentum": -0.748824,
+      "quality": -0.177029,
+      "composite": -0.406505
+    },
+    "D": {
+      "value": 0.478258,
+      "momentum": -0.272567,
+      "quality": -0.205939,
+      "composite": -0.01196
+    },
+    "AEP": {
+      "value": 0.479266,
+      "momentum": -0.3455,
+      "quality": -0.381618,
+      "composite": -0.196617
+    },
+    "EXC": {
+      "value": 0.759843,
+      "momentum": -0.684304,
+      "quality": -0.75179,
+      "composite": -0.51611
+    },
+    "SRE": {
+      "value": 0.327001,
+      "momentum": -0.721217,
+      "quality": -0.046413,
+      "composite": -0.340388
+    },
+    "XEL": {
+      "value": 0.465191,
+      "momentum": -0.674507,
+      "quality": -0.436449,
+      "composite": -0.493375
+    },
+    "WEC": {
+      "value": 0.408875,
+      "momentum": -0.686059,
+      "quality": -0.481447,
+      "composite": -0.577548
+    },
+    "ES": {
+      "value": 0.739439,
+      "momentum": -0.523882,
+      "quality": -0.316947,
+      "composite": -0.08739
+    },
+    "VZ": {
+      "value": 0.862415,
+      "momentum": 0.159186,
+      "quality": -0.125249,
+      "composite": 0.656709
+    },
+    "T": {
+      "value": 0.930549,
+      "momentum": -0.46949,
+      "quality": 0.166467,
+      "composite": 0.456223
+    },
+    "TMUS": {
+      "value": 0.684239,
+      "momentum": -1.126101,
+      "quality": -0.047578,
+      "composite": -0.37679
+    },
+    "NFLX": {
+      "value": -0.2532,
+      "momentum": -1.440473,
+      "quality": 0.973981,
+      "composite": -0.548509
+    },
+    "DIS": {
+      "value": 0.650399,
+      "momentum": -0.601931,
+      "quality": -0.30843,
+      "composite": -0.20565
+    },
+    "CMCSA": {
+      "value": 1.055257,
+      "momentum": -0.864059,
+      "quality": 0.091924,
+      "composite": 0.199373
+    },
+    "CHTR": {
+      "value": 1.114679,
+      "momentum": -1.749038,
+      "quality": -0.898054,
+      "composite": -1.154621
+    },
+    "ATVI": {
+      "value": null,
+      "momentum": null,
+      "quality": null,
+      "composite": -0.011775
+    },
+    "EA": {
+      "value": -0.705635,
+      "momentum": null,
+      "quality": 0.922764,
+      "composite": 0.150156
+    },
+    "TTWO": {
+      "value": -0.589343,
+      "momentum": -0.985377,
+      "quality": -0.969056,
+      "composite": -1.908878
+    }
+  },
+  "power_analysis": {
+    "min_n_required": 175,
+    "available_quarters": 20,
+    "adequately_powered": false
+  }
+}
